@@ -12,7 +12,8 @@ const initialState = {
     loadingMessage: '',
     error: undefined,
     networkId: -1,
-    walletAddress: ''
+    walletAddress: '',
+    reservations: undefined
   }
 }
 

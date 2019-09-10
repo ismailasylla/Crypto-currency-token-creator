@@ -5,6 +5,7 @@
   "dependencies": {
     "@polymathnetwork/sdk": "2.0.1-beta.36",
     "antd": "^3.23.2",
+    "p-iteration": "^1.1.8",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
