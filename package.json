@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@polymathnetwork/sdk": "2.0.1-beta.36",
+    "@polymathnetwork/sdk": "2.0.1-beta.38",
     "antd": "^3.23.2",
     "p-iteration": "^1.1.8",
+    "rc-form-hooks": "^0.0.1-alpha.22",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"

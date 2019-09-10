@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, message } from 'antd'
+import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 
 const { Content } = Layout
@@ -13,6 +14,9 @@ const networkConfigs = {
   42: {
     polymathRegistryAddress: '0x5b215a7d39ee305ad28da29bf2f0425c6c2a00b3'
   },
+  15: {
+    polymathRegistryAddress: '0xdfabf3e4793cd30affb47ab6fa4cf4eef26bbc27'
+  }
 }
 
 message.config({
@@ -86,6 +90,9 @@ function App() {
   const [state, dispatch] = useContext(Store)
   const { sdk, loading, loadingMessage, reservations, walletAddress } = state.AppReducer
   const [ formSymbolValue, setFormSymbolValue ] = useState('')
+
+  const form = useForm()
+  const { getFieldDecorator, setFieldsValue, resetFields, validateFields } = form
   // Initialize the SDK.
   useEffect(() => {
     async function init() {
@@ -130,6 +137,10 @@ function App() {
       dispatch({ type: 'FETCHING_RESERVATIONS' })
       try {
         let reservations = await sdk.getSecurityTokenReservations({owner: walletAddress })
+
+        // @FIXME if there's at least one non-launched token, the call above will throw:
+        // "There is no reservation for token symbol ${reservations[0].symbol}.
+
         reservations = await filter(reservations, async (reservation) => {
           const launched = await reservation.isLaunched()
           return !launched
@@ -183,6 +194,14 @@ function App() {
                 />
               </Item>
               <Button type="primary" onClick={reserveSymbol}>Reserve Symbol</Button>
+            </Form>
+
+            <Divider />
+
+            <Form {...formItemLayout}>
+              <Item label="Token Name">
+                <Input placeholder="Enter Token Name"/>
+              </Item>
             </Form>
           </Content>
         </Layout>

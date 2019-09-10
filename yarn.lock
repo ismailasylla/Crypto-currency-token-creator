@@ -1535,36 +1535,30 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@polymathnetwork/abi-wrappers@3.0.0-beta.8":
-  version "3.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/@polymathnetwork/abi-wrappers/-/abi-wrappers-3.0.0-beta.8.tgz#48cad54a81695ef0ecd55dead7d5901cbd22b545"
-  integrity sha512-7IQgGmQi2O5Ta3Ue397n/q8Jgrr6dIf6sUGAP1cwXUiOLZedmsTzHXwGmQcrsdX++8Hav2P35jh6XH0n7rh+3g==
+"@polymathnetwork/abi-wrappers@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@polymathnetwork/abi-wrappers/-/abi-wrappers-3.0.0.tgz#eaf9daff64e650299fa87ae4269220ec945d0dba"
+  integrity sha512-CnV55bTz/Z89eb6cjgjkho9Z7KY0v34T8Ldw39YIci/XtIOVUBmtXBoV++cuYqYAtjte2P6EixLq0t4mp/uXbQ==
   dependencies:
     "@0x/base-contract" "^5.1.1"
     "@0x/utils" "^4.4.0"
     "@0x/web3-wrapper" "^6.0.7"
-    "@polymathnetwork/contract-artifacts" "3.0.0-beta.5"
     ethereum-types "^2.1.3"
     ethers "^4.0.33"
     lodash "^4.17.15"
     typescript "3.5.3"
 
-"@polymathnetwork/contract-artifacts@3.0.0-beta.5":
-  version "3.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@polymathnetwork/contract-artifacts/-/contract-artifacts-3.0.0-beta.5.tgz#b3bf6c7f40eb036402237d08d98f4f11cc230c87"
-  integrity sha512-YS6VXPqEgv69SEUJHArNLrN93psfPZSRFBxX0TnLPiNC/9wsvdDUXhE0a3RhokEMjYBmD4Yi+CDB71Faxg3jpQ==
-
-"@polymathnetwork/contract-wrappers@2.0.0-beta.35":
-  version "2.0.0-beta.35"
-  resolved "https://registry.yarnpkg.com/@polymathnetwork/contract-wrappers/-/contract-wrappers-2.0.0-beta.35.tgz#fe5e8604e86570099e39476f746ce48233921d19"
-  integrity sha512-OgoSjqmnWM8F6OUFzWLyFvGrWtizZogewTL3uwRLkIBoXePrj14esm/3O+Y3Kho2ha4+YuOjoLpdsy0DmTqWtw==
+"@polymathnetwork/contract-wrappers@2.0.0-beta.40":
+  version "2.0.0-beta.40"
+  resolved "https://registry.yarnpkg.com/@polymathnetwork/contract-wrappers/-/contract-wrappers-2.0.0-beta.40.tgz#eebd0134b34057210e3be9f96e056c44fd0565d4"
+  integrity sha512-DBtffEKpNEz/AxysEl8/UrtEB6snpYT9a9SN/S7oVQANz7jIBwpEYeJurgN1T+z/EWqGqkodMs5FERYz7BDEDA==
   dependencies:
     "@0x/assert" "^2.1.0"
     "@0x/json-schemas" "^3.0.11"
     "@0x/subproviders" "^4.1.1"
     "@0x/types" "^2.4.0"
     "@0x/typescript-typings" "^4.2.3"
-    "@polymathnetwork/abi-wrappers" "3.0.0-beta.8"
+    "@polymathnetwork/abi-wrappers" "3.0.0"
     "@types/semver" "^6.0.1"
     ethereumjs-blockstream "6.0.0"
     ethereumjs-util "^6.1.0"
@@ -1574,15 +1568,15 @@
     semver "^6.3.0"
     uuid "^3.3.2"
 
-"@polymathnetwork/sdk@2.0.1-beta.36":
-  version "2.0.1-beta.36"
-  resolved "https://registry.yarnpkg.com/@polymathnetwork/sdk/-/sdk-2.0.1-beta.36.tgz#34a7e4a0aa75d4e7c48deea37c6d33be93b491c7"
-  integrity sha512-GXhzSlGruI71VW8tnZGFX3I+duMiC4P19yzijYeSeAeNLgqSNSlqi8Gs9e3alSItnkgVVyA2bOy1kGWyIUTITg==
+"@polymathnetwork/sdk@2.0.1-beta.38":
+  version "2.0.1-beta.38"
+  resolved "https://registry.yarnpkg.com/@polymathnetwork/sdk/-/sdk-2.0.1-beta.38.tgz#d36fa42d1450a3aaecff2b0f9da127f689d2b9e8"
+  integrity sha512-Pc+SukCYI0cLOSPnxX9Y2u+tSD4cmr7my5CF8yQEbyuP5STpZ68nKag05lIn/NmSCs0g5kicnI+Am3dCKItIyA==
   dependencies:
     "@0x/subproviders" "^3.0.2"
     "@babel/polyfill" "^7.0.0"
     "@babel/runtime" "^7.2.0"
-    "@polymathnetwork/contract-wrappers" "2.0.0-beta.35"
+    "@polymathnetwork/contract-wrappers" "2.0.0-beta.40"
     bluebird "^3.5.5"
     ethereum-address "^0.0.4"
     json-stable-stringify "^1.0.1"
@@ -2699,6 +2693,11 @@ async-settle@^1.0.0:
   integrity sha1-HQqRS7Aldb7IqPOnTlCA9yssDGs=
   dependencies:
     async-done "^1.2.2"
+
+async-validator@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-2.0.1.tgz#2ab03b1062b5bc727de9229aeeba4dc43f36de24"
+  integrity sha512-sQkJ7Vjgvu9pGCRtDw9CIPuMFstOPtMiMoHqDI3m5xUQhHnHrn/YPBp583IYUaLZi9jW8icGjLlodH0BHSkzeg==
 
 async-validator@~1.11.3:
   version "1.11.5"
@@ -13499,6 +13498,13 @@ rc-editor-mention@^1.1.13:
     prop-types "^15.5.8"
     rc-animate "^2.3.0"
     rc-editor-core "~0.8.3"
+
+rc-form-hooks@^0.0.1-alpha.22:
+  version "0.0.1-alpha.22"
+  resolved "https://registry.yarnpkg.com/rc-form-hooks/-/rc-form-hooks-0.0.1-alpha.22.tgz#0853893afcb0e1d8d6670fe3c52ac1ca2cf18d0b"
+  integrity sha512-1UCFiiemoBx2Fd93IHr3nM4BWon2speWs29G667YMPENU5qSXZtvbPDKlOMK5spRtcId89JaUhK52mwzqU2OoA==
+  dependencies:
+    async-validator "^2.0.1"
 
 rc-form@^2.4.5:
   version "2.4.8"
