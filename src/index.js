@@ -5,7 +5,16 @@ import App from './App'
 import rootReducer from './rootReducer'
 import * as serviceWorker from './serviceWorker'
 
-const initialState = {}
+const initialState = {
+  AppReducer: {
+    sdk: undefined,
+    loading: false,
+    loadingMessage: '',
+    error: undefined,
+    networkId: -1,
+    walletAddress: ''
+  }
+}
 
 export const Store = createContext()
 const WrappedApp = () => {
