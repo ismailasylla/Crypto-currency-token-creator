@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, Divider, Select, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 
@@ -16,7 +16,7 @@ const networkConfigs = {
     polymathRegistryAddress: '0x5b215a7d39ee305ad28da29bf2f0425c6c2a00b3'
   },
   15: {
-    polymathRegistryAddress: '0xdfabf3e4793cd30affb47ab6fa4cf4eef26bbc27'
+    polymathRegistryAddress: '0x9FBDa871d559710256a2502A2517b794B482Db40'
   }
 }
 
@@ -77,6 +77,19 @@ export const reducer = (state, action) => {
       reservations: undefined,
       loadingMessage: 'Refreshing reservations',
     }
+  case 'CREATING_TOKEN':
+    return {
+      ...state,
+      loading: true,
+      loadingMessage: 'Creating token'
+    }
+  case 'CREATED_TOKEN':
+    return {
+      ...state,
+      loading: true,
+      reservations: undefined,
+      loadingMessage: 'Refreshing reservations',
+    }
   case 'FETCHED_RESERVATIONS':
     const { reservations } = action
     return {
@@ -106,7 +119,7 @@ function App() {
   const [ formSymbolValue, setFormSymbolValue ] = useState('')
 
   const form = useForm()
-  const { getFieldDecorator, setFieldsValue, resetFields, validateFields } = form
+  const { getFieldDecorator, setFieldsValue, resetFields, validateFields, hasErrors, getFieldsError } = form
   // Initialize the SDK.
   useEffect(() => {
     async function init() {
@@ -185,6 +198,30 @@ function App() {
     }
   }
 
+  async function createToken(e) {
+    e.preventDefault()
+    const fields = ['symbol', 'name', 'detailsUrl', 'treasuryWallet', 'divisible']
+    validateFields(fields, { force: true })
+      .then(async (values) => {
+        dispatch({type: 'CREATING_TOKEN'})
+        console.log('Submitted values', values)
+        const reservation = reservations.filter(r => r.symbol === values.symbol)[0]
+        console.log(reservation)
+
+        try {
+          const q = await reservation.createSecurityToken(values)
+          const ret = await q.run()
+          console.log(ret)
+          dispatch({ type: 'CREATED_TOKEN'})
+          resetFields()
+        }
+        catch (error) {
+          dispatch({ type: 'ERROR',
+            error: error.message} )
+        }
+      })
+  }
+
   return (
     <div>
       <Spin spinning={loading} tip={loadingMessage} size="large">
@@ -212,15 +249,53 @@ function App() {
             <Divider />
 
             {reservations &&
-              <Form {...formItemLayout}>
-                <Item>
-                  <Select>
+              <Form
+                {...formItemLayout}
+                onSubmit={createToken}>
+                <Item
+                  name="symbol"
+                  label="Reservation">
+                  {getFieldDecorator('symbol', {
+                    rules: [{required: true, message: 'A token reservation is required'}],
+                  })(<Select
+                    placeholder="Select a reservation">
                     {reservations.map(({symbol}) =>
                       <Option key={symbol} value={symbol}>{symbol}</Option> )}
-                  </Select>
+                  </Select>)}
                 </Item>
-                <Item label="Token Name">
-                  <Input placeholder="Enter Token Name"/>
+                <Item
+                  name="name"
+                  label="Token Name"
+                  help="This is the name of your token for display purposes. For example: Toro Token">
+                  {getFieldDecorator('name', {
+                    rules: [{required: true, message: 'Token name is required'}, {max: 64}],
+                  })(<Input placeholder="Enter Token Name"/>)}
+                </Item>
+                <Item
+                  name="detailsUrl"
+                  label="Token Details"
+                  help="This is the name of your token for display purposes. For example: Toro Token">
+                  {getFieldDecorator('detailsUrl', {initialValue: ''})(<Input placeholder="Paste link here"/>)}
+                </Item>
+                <Item
+                  name="treasuryWallet"
+                  label="Treasury Wallet Address"
+                  help="Address of a wallet to be used to store tokens for some operations. Defaults to current user (eg Token Issuer) address">
+                  {getFieldDecorator('treasuryWallet', {initialValue: walletAddress, rules: [{max: 64}] })(<Input />)}
+                </Item>
+                <Item
+                  name="divisible"
+                  label="Divisible"
+                  help="Paste a link to a web page that includes additional information on your token, such as legend.">
+                  {getFieldDecorator('divisible', {
+                    initialValue: false,
+                    valuePropName: 'checked',
+                  })(<Switch />)}
+                </Item>
+                <Item>
+                  <Button type="primary" htmlType="submit">
+                    Create my token
+                  </Button>
                 </Item>
               </Form>
             }
