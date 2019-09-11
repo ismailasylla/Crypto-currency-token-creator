@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, Divider, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, Select, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 
+const { Option } = Select
 const { Content } = Layout
 const { Item } = Form
 const networkConfigs = {
@@ -62,6 +63,19 @@ export const reducer = (state, action) => {
       loading: true,
       loadingMessage: 'Fetching your previously reserved symbols',
       error: undefined,
+    }
+  case 'RESERVING_SYMBOL':
+    return {
+      ...state,
+      loading: true,
+      loadingMessage: 'Reserving symbol'
+    }
+  case 'RESERVED_SYMBOL':
+    return {
+      ...state,
+      loading: true,
+      reservations: undefined,
+      loadingMessage: 'Refreshing reservations',
     }
   case 'FETCHED_RESERVATIONS':
     const { reservations } = action
@@ -137,15 +151,12 @@ function App() {
       dispatch({ type: 'FETCHING_RESERVATIONS' })
       try {
         let reservations = await sdk.getSecurityTokenReservations({owner: walletAddress })
-
-        // @FIXME if there's at least one non-launched token, the call above will throw:
-        // "There is no reservation for token symbol ${reservations[0].symbol}.
-
+        console.log('All reservations', reservations)
         reservations = await filter(reservations, async (reservation) => {
           const launched = await reservation.isLaunched()
           return !launched
         })
-        console.log('Filtered reservations', reservations)
+        console.log('Not launched reservations', reservations)
         dispatch({type: 'FETCHED_RESERVATIONS', reservations})
       } catch (error) {
         dispatch({type: 'ERROR', error: error.message})
@@ -156,13 +167,17 @@ function App() {
     }
   }, [dispatch, reservations, sdk, walletAddress])
 
+  // @TODO refactor into an effect
   async function reserveSymbol() {
     if (formSymbolValue) {
+      dispatch({type: 'RESERVING_SYMBOL'})
       try {
         const q = await sdk.reserveSecurityToken({symbol: formSymbolValue})
         const ret = await q.run()
         console.log('ret', ret)
+        dispatch({type: 'RESERVED_SYMBOL'})
       } catch (error) {
+        dispatch({type: 'ERROR', error: error.message})
         message.error(error.message)
       }
     } else {
@@ -182,8 +197,6 @@ function App() {
               <Item>
                 <Input
                   placeholder="SYMBOL"
-                  size="large"
-                  style={{ width: 110 }}
                   value={formSymbolValue}
                   onChange={({ target: { value }}) => {
                     const pattern = RegExp('^[a-zA-Z0-9_-]*$')
@@ -198,11 +211,19 @@ function App() {
 
             <Divider />
 
-            <Form {...formItemLayout}>
-              <Item label="Token Name">
-                <Input placeholder="Enter Token Name"/>
-              </Item>
-            </Form>
+            {reservations &&
+              <Form {...formItemLayout}>
+                <Item>
+                  <Select>
+                    {reservations.map(({symbol}) =>
+                      <Option key={symbol} value={symbol}>{symbol}</Option> )}
+                  </Select>
+                </Item>
+                <Item label="Token Name">
+                  <Input placeholder="Enter Token Name"/>
+                </Item>
+              </Form>
+            }
           </Content>
         </Layout>
       </Spin>
