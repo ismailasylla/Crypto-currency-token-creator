@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, Fragment } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Steps, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Alert, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 
@@ -9,7 +9,7 @@ const { Option } = Select
 const { Content, Header } = Layout
 const { Item } = Form
 const { Text, Title, Paragraph } = Typography
-const { Step } = Steps
+
 const networkConfigs = {
   1: {
     polymathRegistryAddress: '0xdfabf3e4793cd30affb47ab6fa4cf4eef26bbc27'
@@ -25,6 +25,7 @@ const networkConfigs = {
 message.config({
   duration: 5,
   maxCount: 1,
+  top: 150,
 })
 
 const formItemLayout = {
@@ -149,7 +150,7 @@ function User({walletAddress}) {
 
 function App() {
   const [state, dispatch] = useContext(Store)
-  const { sdk, loading, loadingMessage, reservations, walletAddress, networkId } = state.AppReducer
+  const { sdk, loading, loadingMessage, reservations, walletAddress, error, networkId } = state.AppReducer
   const [ formSymbolValue, setFormSymbolValue ] = useState('')
 
   const form = useForm()
@@ -227,7 +228,6 @@ function App() {
         message.success(`Symbol ${formSymbolValue} has been reserved successfully!`)
       } catch (error) {
         dispatch({type: 'ERROR', error: error.message})
-        message.error(error.message)
       }
     } else {
       message.error('Please provide a symbol')
@@ -277,6 +277,12 @@ function App() {
             padding: 50,
             backgroundColor: '#FAFDFF'
           }}>
+            {error && <Alert
+              message={error}
+              type="error"
+              closable
+              showIcon
+            />}
             <Form colon={false} style={{maxWidth: 600}} {...formItemLayout}>
               <Title level={2} style={{margin: 25}}>Reserve Your Token Symbol</Title>
               <Paragraph style={{margin: 25}}>Reservation ensures that no other organization can create a token symbol identical to yours using the Polymath platform. This operation carries a cost of: 250 POLY.</Paragraph>
