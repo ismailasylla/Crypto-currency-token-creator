@@ -200,12 +200,10 @@ function App() {
       dispatch({ type: 'FETCHING_RESERVATIONS' })
       try {
         let reservations = await sdk.getSecurityTokenReservations({owner: walletAddress })
-        console.log('All reservations', reservations)
         reservations = await filter(reservations, async (reservation) => {
           const launched = await reservation.isLaunched()
           return !launched
         })
-        console.log('Not launched reservations', reservations)
         dispatch({type: 'FETCHED_RESERVATIONS', reservations})
       } catch (error) {
         dispatch({type: 'ERROR', error: error.message})
@@ -224,7 +222,6 @@ function App() {
       try {
         const q = await sdk.reserveSecurityToken({symbol: formSymbolValue})
         const ret = await q.run()
-        console.log('ret', ret)
         dispatch({type: 'RESERVED_SYMBOL'})
         message.success(`Symbol ${formSymbolValue} has been reserved successfully!`)
       } catch (error) {
@@ -241,14 +238,11 @@ function App() {
     validateFields(fields, { force: true })
       .then(async (values) => {
         dispatch({type: 'CREATING_TOKEN'})
-        console.log('Submitted values', values)
         const reservation = reservations.filter(r => r.symbol === values.symbol)[0]
-        console.log(reservation)
 
         try {
           const q = await reservation.createSecurityToken(values)
           const ret = await q.run()
-          console.log(ret)
           dispatch({ type: 'CREATED_TOKEN'})
           message.success(`Token ${reservation.symbol} has been created successfully!`)
           resetFields()
@@ -326,7 +320,7 @@ function App() {
                   style={{textAlign: 'left', marginBottom: 25}}
                   name="name"
                   label="Token Name"
-                  help="This is the name of your token for display purposes. For example: Toro Token">
+                  extra="This is the name of your token for display purposes. For example: Toro Token">
                   {getFieldDecorator('name', {
                     rules: [{required: true, message: 'Token name is required'}, {max: 64}],
                   })(<Input placeholder="Enter Token Name"/>)}
@@ -335,14 +329,14 @@ function App() {
                   style={{textAlign: 'left', marginBottom: 25}}
                   name="detailsUrl"
                   label="Token Details"
-                  help="Paste a link to a web page that includes additional information on your token, such as legend.">
+                  extra="Paste a link to a web page that includes additional information on your token, such as legend.">
                   {getFieldDecorator('detailsUrl', {initialValue: ''})(<Input placeholder="Paste link here"/>)}
                 </Item>
                 <Item
                   style={{textAlign: 'left', marginBottom: 25}}
                   name="treasuryWallet"
                   label="Treasury Wallet Address"
-                  help="Address of a wallet to be used to store tokens for some operations. Defaults to current user (eg Token Issuer) address">
+                  extra="Address of a wallet to be used to store tokens for some operations. Defaults to current user (eg Token Issuer) address">
                   {getFieldDecorator('treasuryWallet', {initialValue: walletAddress,
                     rules: [
                       { required: true  },
@@ -362,7 +356,7 @@ function App() {
                   style={{textAlign: 'left', marginBottom: 25}}
                   name="divisible"
                   label="Divisible"
-                  help="Indivisible tokens are typically used to represent an equity, while divisible tokens may be used to represent divisible assets such as bonds. Please connect with your advisor to select the best option..">
+                  extra="Indivisible tokens are typically used to represent an equity, while divisible tokens may be used to represent divisible assets such as bonds. Please connect with your advisor to select the best option..">
                   {getFieldDecorator('divisible', {
                     initialValue: false,
                     valuePropName: 'checked',
@@ -378,8 +372,6 @@ function App() {
                       Create my token
                     </Button></Col>
                   </Row>
-
-
                 </div>
               </Form>
             }
