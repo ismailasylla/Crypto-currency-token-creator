@@ -4,6 +4,7 @@ import { Polymath, browserUtils } from '@polymathnetwork/sdk'
 import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Alert, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
+import { utils as web3Utils } from 'web3'
 
 const { Option } = Select
 const { Content, Header } = Layout
@@ -342,7 +343,20 @@ function App() {
                   name="treasuryWallet"
                   label="Treasury Wallet Address"
                   help="Address of a wallet to be used to store tokens for some operations. Defaults to current user (eg Token Issuer) address">
-                  {getFieldDecorator('treasuryWallet', {initialValue: walletAddress, rules: [{max: 64}, {required:true}] })(<Input />)}
+                  {getFieldDecorator('treasuryWallet', {initialValue: walletAddress,
+                    rules: [
+                      { required: true  },
+                      {
+                        validator: (rule, value, callback) => {
+                          if (!web3Utils.isAddress(value)) {
+                            callback('Address is invalid')
+                            return
+                          }
+                          callback()
+                          return
+                        }
+                      }
+                    ] })(<Input />)}
                 </Item>
                 <Item
                   style={{textAlign: 'left', marginBottom: 25}}
