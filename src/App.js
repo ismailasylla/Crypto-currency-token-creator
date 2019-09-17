@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, Fragment } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Alert, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Alert, Row, Col, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 import { utils as web3Utils } from 'web3'
@@ -368,9 +368,19 @@ function App() {
                     valuePropName: 'checked',
                   })(<Switch style={{float: 'left'}} />)}
                 </Item>
-                <Button type="primary" style={{width: '100%'}} htmlType="submit">
-                    Create my token
-                </Button>
+
+                <div style={{width: '100%'}}>
+                  <Row gutter={16}>
+                    <Col span={12}><Button style={{width: '100%'}} htmlType="reset" onClick={() => resetFields()}>
+                    Reset fields
+                    </Button></Col>
+                    <Col span={12}> <Button type="primary" style={{width: '100%'}} htmlType="submit">
+                      Create my token
+                    </Button></Col>
+                  </Row>
+
+
+                </div>
               </Form>
             }
           </Content>
