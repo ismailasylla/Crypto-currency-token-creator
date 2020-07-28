@@ -20,3 +20,8 @@ code {
   height: 100%;
   text-align: center;
 }
+
+.logo {
+  width: 300px;
+  text-indent: -9999px;
+}
