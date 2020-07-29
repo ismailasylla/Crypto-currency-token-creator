@@ -8,7 +8,7 @@ const { Text, Title, Paragraph } = Typography;
 
 export default function CreateToken({ Form, CreateTokenSymbol, formItemLayout, reservations, createToken, getFieldDecorator, resetFields, walletAddress }) {
   return (
-    <div>
+    <div className="container d-flex justify-content-center mb-5">
       {reservations &&
         <Form colon={false} style={{ maxWidth: 600 }} {...formItemLayout}
           onSubmit={createToken}>

@@ -6,6 +6,7 @@ import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 import { utils as web3Utils } from 'web3';
 import CreateToken from './components/CreateToken';
+import CreateTokenSymbol from './components/CreateTokenSymbol';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo/logo.png';
 import NavBar from './components/NavBar';
@@ -267,73 +268,53 @@ function App() {
   return (
     <>
       <NavBar />
-      <div className="d-flex justify-content-end">
-        <Header style={{
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          alignItems: 'center'
-        }}>
-          <Network networkId={networkId} />
-          <User walletAddress={walletAddress} />
-        </Header>
-      </div>
-      <Switch>
-        <Route path="/createtoken" render={() => <CreateToken
-          CreateToken={createToken}
-          Form={Form}
-          formItemLayout={formItemLayout}
-          reservations={reservations}
-          createToken={createToken}
-          getFieldDecorator={getFieldDecorator}
-          walletAddress={walletAddress}
-          resetFields={resetFields}
-        />
-        } />
-        {/* <Route path="/createsymbol" component={CreateSymbol} /> */}
-        <Route path="/" component={Home} />
-      </Switch>
+
+      <Spin spinning={loading} tip={loadingMessage} size="large">
+        {/* create token symbol component goes here */}
+        <div className="d-flex justify-content-end">
+          <Header style={{
+            backgroundColor: 'white',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center'
+          }}>
+            <Network networkId={networkId} />
+            <User walletAddress={walletAddress} />
+          </Header>
+        </div>
+        {/* logo */}
+        <img className="logo " src={logo} alt="Logo" />
+        <Switch>
+          <Route path="/createtoken" render={(props) => <CreateToken
+            CreateToken={createToken}
+            Form={Form}
+            formItemLayout={formItemLayout}
+            reservations={reservations}
+            createToken={createToken}
+            getFieldDecorator={getFieldDecorator}
+            walletAddress={walletAddress}
+            resetFields={resetFields}
+            {...props}
+          />
+          } />
+          <Route path="/createsymbol" render={(props) =>
+            <CreateTokenSymbol
+              Form={Form}
+              formItemLayout={formItemLayout}
+              formSymbolValue={formSymbolValue}
+              setFormSymbolValue={setFormSymbolValue}
+              reserveSymbol={reserveSymbol}
+            />
+          } />
+
+          <Route path="/" component={Home} />
+        </Switch>
+      </Spin>
 
 
-      <div className="d-flex justify-content-center">
-        <Spin spinning={loading} tip={loadingMessage} size="large">
 
-          <Layout>
-            <Content style={{
-              padding: 50,
-              backgroundColor: '#FAFDFF'
-            }}>
-              {error && <Alert
-                message={error}
-                type="error"
-                closable
-                showIcon
-              />}
-              <Form colon={false} style={{ maxWidth: 600 }} {...formItemLayout}>
-                <img className="logo " src={logo} alt="Logo" />
-                <Title level={2} style={{ margin: 25 }}>Reserve Your Token Symbol</Title>
-                <Paragraph style={{ margin: 25 }}>Reservation ensures that no other organization can create a token symbol identical to yours using the Polymath platform. This operation carries a cost of: 250 POLY.</Paragraph>
-                <Item name="symbol"
-                  label="Symbol">
-                  <Input
-                    placeholder="SYMBOL"
-                    value={formSymbolValue}
-                    onChange={({ target: { value } }) => {
-                      const pattern = RegExp('^[a-zA-Z0-9_-]*$')
-                      if (pattern.test(value) && value.length <= 10) {
-                        setFormSymbolValue(value.toUpperCase())
-                      }
-                    }}
-                  />
-                </Item>
-                <Button className="" type="primary" style={{ width: '100%' }} onClick={reserveSymbol}>Reserve Symbol</Button>
-              </Form>
-              <Divider />
-            </Content>
-          </Layout>
-        </Spin>
-      </div>
+
 
     </>
   )

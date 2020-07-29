@@ -22,12 +22,13 @@ function NavBar() {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <Link className="nav-link" to="/">
+            <Link className="nav-link" to="/createsymbol">
               Create Token Symbol <span className="sr-only">(current)</span>
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/createtoken">
+              <i class="fa fa-btc" aria-hidden="true"></i>
               Create Token
             </Link>
           </li>
