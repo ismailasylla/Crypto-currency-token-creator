@@ -80,7 +80,7 @@ export default function CreateToken({ Form, CreateTokenSymbol, formItemLayout, r
               <Col span={12}><Button style={{ width: '100%' }} htmlType="reset" onClick={() => resetFields()}>
                 Reset fields
                     </Button></Col>
-              <Col span={12}> <Button type="primary" style={{ width: '100%' }} htmlType="submit">
+              <Col span={12}> <Button type="info" style={{ width: '100%' }} htmlType="submit">
                 Create my token
                     </Button></Col>
             </Row>

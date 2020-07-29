@@ -30,3 +30,8 @@ code {
   width: 100px;
   text-indent: -9999px;
 }
+
+.background {
+  /* background: #ebf8ff; */
+  /* background: lightblue url("./images/background/planet.png") no-repeat fixed center; */
+}

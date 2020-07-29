@@ -4,21 +4,19 @@ import { Polymath, browserUtils } from '@polymathnetwork/sdk'
 import { Layout, Spin, Form, Input, Button, Divider, Select, Icon, Typography, Alert, Row, Col, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
-import { utils as web3Utils } from 'web3';
+// import { utils as web3Utils } from 'web3';
 import CreateToken from './components/CreateToken';
 import CreateTokenSymbol from './components/CreateTokenSymbol';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from './images/logo/logo.png';
+import logo from './images/logo/logoblue.png';
 import NavBar from './components/NavBar';
 import { Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 
 
+const { Header } = Layout
 
-const { Option } = Select
-const { Content, Header } = Layout
-const { Item } = Form
-const { Text, Title, Paragraph } = Typography
+const { Text } = Typography
 
 const networkConfigs = {
   1: {
@@ -266,17 +264,14 @@ function App() {
   }
 
   return (
-    <>
+    <div className="background">
       <NavBar />
-
       <Spin spinning={loading} tip={loadingMessage} size="large">
-        {/* create token symbol component goes here */}
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-center">
           <Header style={{
             backgroundColor: 'white',
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'flex-end',
             alignItems: 'center'
           }}>
             <Network networkId={networkId} />
@@ -284,7 +279,9 @@ function App() {
           </Header>
         </div>
         {/* logo */}
-        <img className="logo " src={logo} alt="Logo" />
+
+        <img className="logo logohover" src={logo} alt="Logo" />
+        <Divider />
         <Switch>
           <Route path="/createtoken" render={(props) => <CreateToken
             CreateToken={createToken}
@@ -311,12 +308,7 @@ function App() {
           <Route path="/" component={Home} />
         </Switch>
       </Spin>
-
-
-
-
-
-    </>
+    </div>
   )
 }
 

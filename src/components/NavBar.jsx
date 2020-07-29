@@ -3,33 +3,37 @@ import logo from '../images/logo/logo.png';
 import { Link } from 'react-router-dom';
 function NavBar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link className="navbar-brand" to="/">
-        <img className="logoNav " src={logo} alt="Logo" />
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <Link class="navbar-brand" to="/">
+        {/* <img className="logoNav" src={logo} alt="Logo" /> */}
+        AlphaSeed
       </Link>
       <button
-        className="navbar-toggler"
+        class="navbar-toggler"
         type="button"
         data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
+        data-target="#navbarColor02"
+        aria-controls="navbarColor02"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span className="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
-            <Link className="nav-link" to="/createsymbol">
-              Create Token Symbol <span className="sr-only">(current)</span>
+      <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <Link class="nav-link" to="createtoken">
+              <i class="fas fa-coins">
+                <span className="m-1">Create Token</span>
+              </i>
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/createtoken">
-              <i class="fa fa-btc" aria-hidden="true"></i>
-              Create Token
+          <li class="nav-item">
+            <Link class="nav-link" to="createsymbol">
+              <i class="fas fa-coins">
+                <span className="m-1">Create Symbol</span>
+              </i>
             </Link>
           </li>
         </ul>
