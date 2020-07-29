@@ -1,13 +1,18 @@
 import React, { useContext, useEffect, useState, Fragment } from 'react'
 import { Store } from './index'
 import { Polymath, browserUtils } from '@polymathnetwork/sdk'
-import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typography, Alert, Row, Col, message } from 'antd'
+import { Layout, Spin, Form, Input, Button, Divider, Select, Icon, Typography, Alert, Row, Col, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 import { utils as web3Utils } from 'web3';
 import CreateToken from './components/CreateToken';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo/logo.png';
+import NavBar from './components/NavBar';
+import { Route, Switch } from 'react-router-dom';
+import Home from './components/Home';
+
+
 
 const { Option } = Select
 const { Content, Header } = Layout
@@ -261,6 +266,7 @@ function App() {
 
   return (
     <>
+      <NavBar />
       <div className="d-flex justify-content-end">
         <Header style={{
           backgroundColor: 'white',
@@ -273,6 +279,23 @@ function App() {
           <User walletAddress={walletAddress} />
         </Header>
       </div>
+      <Switch>
+        <Route path="/createtoken" render={() => <CreateToken
+          CreateToken={createToken}
+          Form={Form}
+          formItemLayout={formItemLayout}
+          reservations={reservations}
+          createToken={createToken}
+          getFieldDecorator={getFieldDecorator}
+          walletAddress={walletAddress}
+          resetFields={resetFields}
+        />
+        } />
+        {/* <Route path="/createsymbol" component={CreateSymbol} /> */}
+        <Route path="/" component={Home} />
+      </Switch>
+
+
       <div className="d-flex justify-content-center">
         <Spin spinning={loading} tip={loadingMessage} size="large">
 
@@ -306,24 +329,13 @@ function App() {
                 </Item>
                 <Button className="" type="primary" style={{ width: '100%' }} onClick={reserveSymbol}>Reserve Symbol</Button>
               </Form>
-
               <Divider />
-              <CreateToken
-                CreateToken={createToken}
-                Form={Form}
-                formItemLayout={formItemLayout}
-                reservations={reservations}
-                createToken={createToken}
-                getFieldDecorator={getFieldDecorator}
-                walletAddress={walletAddress}
-                resetFields={resetFields}
-              />
-
-
             </Content>
           </Layout>
         </Spin>
-      </div></>
+      </div>
+
+    </>
   )
 }
 
