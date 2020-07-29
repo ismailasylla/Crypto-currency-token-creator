@@ -5,6 +5,7 @@ import { Layout, Spin, Form, Input, Button, Divider, Select, Switch, Icon, Typog
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
 import { utils as web3Utils } from 'web3';
+import CreateToken from './components/CreateToken';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo/logo.png';
 
@@ -307,6 +308,16 @@ function App() {
               </Form>
 
               <Divider />
+              <CreateToken
+                CreateTokenSymbol={this.CreateTokenSymbol}
+                Form={this.form}
+                formItemLayout={this.formItemLayout}
+                reservations={this.reservations}
+                createToken={this.createToken}
+                getFieldDecorator={getFieldDecorator}
+                walletAddress={this.walletAddress}
+                resetFields={resetFields}
+              />
 
               {reservations &&
                 <Form colon={false} style={{ maxWidth: 600 }} {...formItemLayout}
