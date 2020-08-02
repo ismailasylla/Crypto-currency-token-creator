@@ -14,7 +14,12 @@ const initialState = {
     error: undefined,
     networkId: -1,
     walletAddress: '',
-    reservations: undefined
+    reservations: undefined,
+    tokens: [],
+    tokenIndex: undefined,
+    pmEnabled: undefined,
+    delegates: undefined,
+    features: undefined
   }
 }
 
@@ -22,6 +27,11 @@ export const Store = createContext()
 const WrappedApp = () => {
   const store = useReducer(rootReducer, initialState)
   return (<Store.Provider value={store}><App /></Store.Provider>)
+}
+
+// permissions
+export const _split = (string) => {
+  return string.split(/(?=[A-Z])/).join(' ')
 }
 
 const DispatchContext = React.createContext(null)

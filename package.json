@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@polymathnetwork/react": "https://github.com/PolymathNetwork/polymath-react",
     "@polymathnetwork/sdk": "3.0.0",
     "antd": "^3.23.2",
     "bootstrap": "^4.5.0",
@@ -38,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "husky": "^3.0.9"
   }
 }
