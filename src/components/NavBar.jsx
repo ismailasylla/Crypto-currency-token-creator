@@ -23,16 +23,16 @@ function NavBar() {
       <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <Link class="nav-link" to="createtoken">
+            <Link class="nav-link" to="createsymbol">
               <i class="fas fa-coins">
-                <span className="m-1">Create Token</span>
+                <span className="m-1">Create Symbol</span>
               </i>
             </Link>
           </li>
           <li class="nav-item">
-            <Link class="nav-link" to="createsymbol">
+            <Link class="nav-link" to="createtoken">
               <i class="fas fa-coins">
-                <span className="m-1">Create Symbol</span>
+                <span className="m-1">Create Token</span>
               </i>
             </Link>
           </li>
