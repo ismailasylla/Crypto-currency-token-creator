@@ -36,6 +36,34 @@ function NavBar() {
               </i>
             </Link>
           </li>
+          <li class="nav-item">
+            <Link class="nav-link" to="whitelist-specifications">
+              <i class="fas fa-coins">
+                <span className="m-1">White List</span>
+              </i>
+            </Link>
+          </li>
+          <li class="nav-item">
+            <Link class="nav-link" to="permissions">
+              <i class="fas fa-coins">
+                <span className="m-1">Permissions</span>
+              </i>
+            </Link>
+          </li>
+          <li class="nav-item">
+            <Link class="nav-link" to="minting">
+              <i class="fas fa-coins">
+                <span className="m-1">Minting</span>
+              </i>
+            </Link>
+          </li>
+          <li class="nav-item">
+            <Link class="nav-link" to="sto">
+              <i class="fas fa-coins">
+                <span className="m-1">STO</span>
+              </i>
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

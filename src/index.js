@@ -1,11 +1,10 @@
 import React, { createContext, useReducer } from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom';
 import './index.css'
 import App from './App'
 import rootReducer from './rootReducer'
-import * as serviceWorker from './serviceWorker'
-
+import * as serviceWorker from './serviceWorker';
+import { BrowserRouter } from 'react-router-dom';
 
 const initialState = {
   AppReducer: {
@@ -25,13 +24,10 @@ const WrappedApp = () => {
   return (<Store.Provider value={store}><App /></Store.Provider>)
 }
 
-ReactDOM.render(
-  <>
-    < BrowserRouter>
-      <WrappedApp />
-    </ BrowserRouter>
-  </>
-  , document.getElementById('root'))
+const DispatchContext = React.createContext(null)
+export default DispatchContext
+
+ReactDOM.render(< BrowserRouter><WrappedApp /></BrowserRouter>, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

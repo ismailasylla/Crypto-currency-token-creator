@@ -4,14 +4,15 @@ import { Polymath, browserUtils } from '@polymathnetwork/sdk'
 import { Layout, Spin, Form, Input, Button, Divider, Select, Icon, Typography, Alert, Row, Col, message } from 'antd'
 import useForm from 'rc-form-hooks'
 import { filter } from 'p-iteration'
-// import { utils as web3Utils } from 'web3';
 import CreateToken from './components/CreateToken';
 import CreateTokenSymbol from './components/CreateTokenSymbol';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo/logoblue.png';
 import NavBar from './components/NavBar';
 import { Route, Switch } from 'react-router-dom';
-import Home from './components/Home';
+// import Home from './components/Home';
+import DispatchContext from './index';
+import Selector from './components/whitelist/Selector'
 
 
 const { Header } = Layout
@@ -46,6 +47,8 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 }
+
+
 
 export const reducer = (state, action) => {
   console.log('ACTION', action)
@@ -265,49 +268,53 @@ function App() {
 
   return (
     <div className="background">
-      <NavBar />
-      <Spin spinning={loading} tip={loadingMessage} size="large">
-        <div className="d-flex justify-content-center">
-          <Header style={{
-            backgroundColor: 'white',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-            <Network networkId={networkId} />
-            <User walletAddress={walletAddress} />
-          </Header>
-        </div>
-        {/* logo */}
+      <DispatchContext.Provider value={dispatch}>
+        <NavBar />
+        <Spin spinning={loading} tip={loadingMessage} size="large">
+          <div className="d-flex justify-content-center">
+            <Header style={{
+              backgroundColor: 'white',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+              <Network networkId={networkId} />
+              <User walletAddress={walletAddress} />
+            </Header>
+          </div>
+          {/* logo */}
 
-        <img className="logo logohover" src={logo} alt="Logo" />
-        <Divider />
-        <Switch>
-          <Route path="/createtoken" render={(props) => <CreateToken
-            CreateToken={createToken}
-            Form={Form}
-            formItemLayout={formItemLayout}
-            reservations={reservations}
-            createToken={createToken}
-            getFieldDecorator={getFieldDecorator}
-            walletAddress={walletAddress}
-            resetFields={resetFields}
-            {...props}
-          />
-          } />
-          <Route path="/createsymbol" render={(props) =>
-            <CreateTokenSymbol
+          {/* <img className="logo logohover" src={logo} alt="Logo" /> */}
+          <Divider />
+          <Switch>
+            <Route path="/createtoken" render={(props) => <CreateToken
+              CreateToken={createToken}
               Form={Form}
               formItemLayout={formItemLayout}
-              formSymbolValue={formSymbolValue}
-              setFormSymbolValue={setFormSymbolValue}
-              reserveSymbol={reserveSymbol}
+              reservations={reservations}
+              createToken={createToken}
+              getFieldDecorator={getFieldDecorator}
+              walletAddress={walletAddress}
+              resetFields={resetFields}
+              {...props}
             />
-          } />
+            } />
+            <Route path="/createsymbol" render={(props) =>
+              <CreateTokenSymbol
+                Form={Form}
+                formItemLayout={formItemLayout}
+                formSymbolValue={formSymbolValue}
+                setFormSymbolValue={setFormSymbolValue}
+                reserveSymbol={reserveSymbol}
+              />
+            } />
 
-          <Route path="/" component={Home} />
-        </Switch>
-      </Spin>
+            <Route path="/whitelist-specifications" render={(props) =>
+              <Selector />
+            } />
+          </Switch>
+        </Spin>
+      </DispatchContext.Provider>
     </div>
   )
 }
