@@ -8,6 +8,7 @@
     "@polymathnetwork/sdk": "3.0.0",
     "antd": "^3.23.2",
     "bootstrap": "^4.5.0",
+    "file-saver": "^2.0.2",
     "gh-pages": "^2.1.1",
     "p-iteration": "^1.1.8",
     "rc-form-hooks": "^0.0.1-alpha.22",

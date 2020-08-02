@@ -19,7 +19,9 @@ const initialState = {
     tokenIndex: undefined,
     pmEnabled: undefined,
     delegates: undefined,
-    features: undefined
+    features: undefined,
+    tokenholders: [],
+    reloadTokenholders: false
   }
 }
 

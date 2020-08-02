@@ -22,6 +22,7 @@ import {
   Alert,
   Row,
   Col,
+  Upload,
   message,
 } from 'antd';
 import { Feature } from '@polymathnetwork/sdk';
@@ -38,6 +39,9 @@ import DispatchContext from './index';
 import Selector from './components/whitelist/Selector';
 import PMDisplay from './components/permissions/PMDisplay';
 import { _split } from './index';
+import { BigNumber } from '@polymathnetwork/sdk'
+import FileSaver from 'file-saver'
+import TokenholdersTable from './components/minting/Tokenholders';
 
 const { Content, Header, Sider } = Layout;
 const PERMISSIONS_FEATURE = Feature.Permissions;
@@ -169,6 +173,16 @@ export const reducer = (state, action) => {
         error: undefined,
         features: undefined,
       };
+    case 'RELOAD_TOKENHOLDERS':
+      const { tokenIndex } = action
+      return {
+        ...state,
+        tokenIndex,
+        records: undefined,
+        error: undefined,
+        tokenholders: [],
+        reloadTokenholders: true,
+      };
     default:
       throw new Error(`Unrecognized action type: ${action.type}`);
   }
@@ -182,10 +196,10 @@ function Features({ features, pmEnabled, onClick }) {
         {pmEnabled ? (
           <Badge status="success" text="enabled" />
         ) : (
-          <Button type="primary" onClick={onClick}>
-            Enable
-          </Button>
-        )}
+            <Button type="primary" onClick={onClick}>
+              Enable
+            </Button>
+          )}
       </Descriptions.Item>
 
       {Object.keys(features).map((feat) => {
@@ -262,8 +276,9 @@ function App() {
     networkId,
     features,
     pmEnabled,
-    records,
+    // records,
     availableRoles,
+    reloadTokenholders, tokenholders
   } = state.AppReducer;
   const [formSymbolValue, setFormSymbolValue] = useState('');
   const form = useForm();
@@ -526,6 +541,102 @@ function App() {
     }
   };
 
+  // Fetch tokenholders + balances.
+  useEffect(() => {
+    async function fetchTokenholders() {
+      let tokenholders = await token.tokenholders.getTokenholders()
+      return {
+        tokenholders
+      }
+    }
+    if (reloadTokenholders === true | token !== undefined) {
+      asyncAction(dispatch, () => fetchTokenholders(token), 'Fetching tokenholders as well as their token balances')
+    }
+  }, [tokens, reloadTokenholders, token, dispatch])
+
+  const records = tokenholders.map(({ address, balance }) => ({
+    address,
+    balance: balance.toString()
+  }))
+
+  function getData(url, callback) {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => callback(reader.result))
+    reader.readAsText(url)
+  }
+
+  const fileUploadChange = (info) => {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList)
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`)
+      getData(info.file.originFileObj, data => {
+        importData(data)
+      })
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`)
+    }
+  }
+
+  const issueTokens = async (records) => {
+    const q = await token.issuance.issue({ issuanceData: records })
+    await q.run()
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    dispatch({ type: 'RELOAD_TOKENHOLDERS' })
+  }
+
+  const burnTokens = async (amount, from, reason = '') => {
+    asyncAction(dispatch, () => controllerRedeem(amount, from, reason), `Burning ${amount} tokens from ${from}`)
+  }
+
+  const controllerRedeem = async (amount, from, reason) => {
+    reason = '0x' + reason
+    amount = new BigNumber(amount)
+    while (true) {
+      try {
+        const q = await token.controller.redeem({ amount, from, reason })
+        await q.run()
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        dispatch({ type: 'RELOAD_TOKENHOLDERS' })
+        return
+      }
+      catch (error) {
+        console.error(error)
+        if (error.message.includes('You must be the controller')) {
+          console.log(`Add ${walletAddress} as controller`)
+          const addControllerQ = await token.controller.modifyController({ controller: walletAddress })
+          await addControllerQ.run()
+        }
+        else {
+          dispatch({ type: 'ERROR', error: error.message })
+          return
+        }
+      }
+    }
+  }
+
+  const importData = (data) => {
+    data = data.split('\r\n')
+      .map(record => record.trim())
+      .filter(record => record.length)
+      // Convert string amounts to BigNumber.
+      .map(record => {
+        let [address, amount] = record.split(',')
+        return { address, amount: new BigNumber(amount) }
+      })
+    asyncAction(dispatch, () => issueTokens(data), 'Issuing tokens')
+  }
+
+  const exportData = () => {
+    const csvContent = records.map(({ address, balance }) => {
+      return [address, balance].join(',')
+    }).join('\r\n')
+    console.log('csvContent', csvContent)
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
+    FileSaver.saveAs(blob, 'investors.csv')
+  }
+
   return (
     <div className="background">
       <DispatchContext.Provider value={dispatch}>
@@ -533,8 +644,6 @@ function App() {
         {/* <img className="logo logohover mt-5" src={logo} alt="Logo" /> */}
         <Divider />
         <Spin spinning={loading} tip={loadingMessage} size="large">
-          <h3> Your Address</h3>
-          <i class="fas fa-arrow-alt-circle-down"></i>
           <div className="d-flex justify-content-center">
             <Header
               style={{
@@ -648,6 +757,61 @@ function App() {
                   </Content>
                 </Layout>
               )}
+            />
+
+            <Route
+              path="/minting"
+              render={(props) => <Layout>
+                <Sider width={350}
+                  style={{
+                    padding: 50,
+                    backgroundColor: '#FAFDFF'
+                  }}
+                >
+                  {walletAddress && tokens &&
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: 250,
+                      justifyContent: 'flex-start'
+                    }}>
+                      {tokenSelector({
+                        onTokenSelect: () => dispatch({ type: 'TOKEN_SELECTED' })
+                      })}
+                    </div>
+                  }
+                </Sider>
+                <Content style={{
+                  padding: 50,
+                  backgroundColor: '#FAFDFF'
+                }}>
+                  {error && <Alert
+                    message={error}
+                    type="error"
+                    closable
+                    showIcon
+                  />}
+                  {token &&
+                    <Fragment>
+                      <Button style={{ marginTop: 20, marginBottom: 20, marginRight: 20 }} type="primary" onClick={exportData}>Export</Button>
+                      <Upload style={{ marginTop: 20, marginBottom: 20 }} onChange={fileUploadChange}
+                        accept='csv'
+                        showUploadList={false}
+                        name={'file'}
+                        action={'https://www.mocky.io/v2/5cc8019d300000980a055e76'}
+                        headers={{
+                          authorization: 'authorization-text',
+                        }}>
+                        <Button>
+                          <Icon type="upload" />Import
+                        </Button>
+                      </Upload>
+                    </Fragment>
+                  }
+                  {tokenholders.length > 0 &&
+                    <TokenholdersTable tokenholders={records} burnTokens={burnTokens} />}
+                </Content>
+              </Layout>}
             />
           </Switch>
         </Spin>
